@@ -22,13 +22,20 @@ import java.util.Queue;
 
 /**
  *
- * @author Len Payne <len.payne@lambtoncollege.ca>
+ * @author Scott Melanson
  */
 public class OrderQueue {
     Queue<Order> orderQueue = new ArrayDeque<>();
     
-    public void add(Order order) {
+    public void add(Order order) throws Exception {
         orderQueue.add(order);
         order.setTimeReceived(new Date());
+        if  (order.getCustomerName().equals("") || order.getCustomerId().equals("")){
+            throw new Exception("Customer Name or ID is Empty");
+        }
+        
+        if(order.getListOfPurchases().isEmpty()){
+            throw new Exception("Purchase list is Empty");
+        }
     }
 }
