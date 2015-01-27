@@ -29,7 +29,7 @@ import org.junit.Test;
 
 /**
  *
- * @author
+ * @author Scott Melanson
  */
 public class OrderQueueTest {
     
@@ -52,7 +52,7 @@ public class OrderQueueTest {
     public void tearDown() {
     }
 
-    @Test
+    @Test //1
     public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws Exception {
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("CUST00001", "ABC Construction");
@@ -65,7 +65,7 @@ public class OrderQueueTest {
         assertTrue(Math.abs(result - expResult) < 1000);
     }
     
-    @Test
+    @Test //2
     public void testWhenCustomerDoesNotExistsAndThenThrowException() {
         boolean var = false;
         OrderQueue orderQueue = new OrderQueue();
@@ -85,7 +85,7 @@ public class OrderQueueTest {
         assertTrue(var);
     }
     
-        @Test
+    @Test //3
     public void testWhenNoListOfPurchasesThrowException(){
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("CUST00001", "ABC Construction");
@@ -104,4 +104,28 @@ public class OrderQueueTest {
 
     }
     
+    @Test //4
+    public void testWhenNextOrderAndOrdersExistReturnEarliestOrderNotProcessedWithNoTime() throws Exception {
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase("PROD0004", 450));
+        order.addPurchase(new Purchase("PROD0006", 250));
+        orderQueue.add(order);
+        Order testOrder = orderQueue.getEarliestNotProcessed();
+
+
+        assertEquals(order,testOrder);
+    }
+    
+   @Test //5
+    public void testWhenNextOrderAndNoOrdersExistReturnNull() throws Exception {
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase("PROD0004", 450));
+        order.addPurchase(new Purchase("PROD0006", 250));
+        orderQueue.add(order);
+        Order testOrder = orderQueue.getEarliestNotProcessed();
+
+        assertNull(testOrder.getTimeProcessed());
+    }
 }
