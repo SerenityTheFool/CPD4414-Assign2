@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cpd4414.assign2;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -25,17 +26,35 @@ import java.util.Queue;
  * @author Scott Melanson
  */
 public class OrderQueue {
+
     Queue<Order> orderQueue = new ArrayDeque<>();
-    
+    List<Order> orderProcessed = new ArrayList<>();
+
     public void add(Order order) throws Exception {
         orderQueue.add(order);
         order.setTimeReceived(new Date());
-        if  (order.getCustomerName().equals("") || order.getCustomerId().equals("")){
+        if (order.getCustomerName().equals("") || order.getCustomerId().equals("")) {
             throw new Exception("Customer Name or ID is Empty");
         }
-        
-        if(order.getListOfPurchases().isEmpty()){
+
+        if (order.getListOfPurchases().isEmpty()) {
             throw new Exception("Purchase list is Empty");
+        }
+    }
+
+    public Order getEarliestNotProcessed() {
+        
+        return orderQueue.peek();
+
+    }
+
+    public Order processNextOrder() {
+        if (orderQueue.peek().getTimeProcessed() == null) { //if null then not processed
+            Order tempOrder = orderQueue.remove();
+            orderProcessed.add(tempOrder);
+            return tempOrder;
+        } else {
+            return null;
         }
     }
 }
