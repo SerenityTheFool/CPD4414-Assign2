@@ -29,10 +29,11 @@ public class OrderQueue {
 
     Queue<Order> orderQueue = new ArrayDeque<>();
     List<Order> orderProcessed = new ArrayList<>();
+    List<Order> orderFulfilled = new ArrayList<>();
 
     public void add(Order order) throws Exception {
         orderQueue.add(order);
-        order.setTimeReceived(new Date());
+
         if (order.getCustomerName().equals("") || order.getCustomerId().equals("")) {
             throw new Exception("Customer Name or ID is Empty");
         }
@@ -40,10 +41,12 @@ public class OrderQueue {
         if (order.getListOfPurchases().isEmpty()) {
             throw new Exception("Purchase list is Empty");
         }
+        order.setTimeReceived(new Date());
+
     }
 
     public Order getEarliestNotProcessed() {
-        
+
         return orderQueue.peek();
 
     }
@@ -56,5 +59,22 @@ public class OrderQueue {
         } else {
             return null;
         }
+    }
+    
+    public Order next(){
+        return orderQueue.peek();
+    }
+    
+    public void process(Order order){
+        if(order.getTimeReceived()!= null){
+            order.setTimeProcessed(new Date());
+        }
+        
+        for(int x = 0;x < order.getListOfPurchases().size(); x++){
+           String productId = order.getListOfPurchases().get(x).getProductId();
+           //TODO: Check if product is in stock in Database
+        }
+            
+            
     }
 }
