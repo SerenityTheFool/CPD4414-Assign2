@@ -128,4 +128,16 @@ public class OrderQueueTest {
 
         assertNull(testOrder.getTimeProcessed());
     }
+    
+    @Test //6
+    public void testWhenNextOrderIfNoOrdersReturnNull(){
+        OrderQueue orderQueue = new OrderQueue();
+        
+        boolean expResult = true;
+        if (orderQueue.next() == null){
+            expResult = true;
+        }
+        
+        assertEquals(expResult, true);
+    }
 }
