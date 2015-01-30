@@ -30,6 +30,7 @@ public class OrderQueue {
     Queue<Order> orderQueue = new ArrayDeque<>();
     List<Order> orderProcessed = new ArrayList<>();
     List<Order> orderFulfilled = new ArrayList<>();
+    Inventory inventory = new Inventory();
 
     public void add(Order order) throws Exception {
         orderQueue.add(order);
@@ -60,21 +61,31 @@ public class OrderQueue {
             return null;
         }
     }
-    
-    public Order next(){
+
+    public Order next() {
         return orderQueue.peek();
     }
-    
-    public void process(Order order){
-        if(order.getTimeReceived()!= null){
-            order.setTimeProcessed(new Date());
+
+    public void process(Order order) throws Exception {
+
+        boolean flag = false;
+
+        for (int x = 0; x < order.getListOfPurchases().size(); x++) {
+            int productId = order.getListOfPurchases().get(x).getProductId();
+            int quantityOfProduct = order.getListOfPurchases().get(x).getQuantity();
+            if (inventory.getQuantityForId(productId) >= quantityOfProduct) {
+                flag = true;
+            } else {
+                flag = false;
+            }
         }
+
+        if (order.getTimeReceived() == null || flag == false) {
+            throw new Exception("Exception");
+        }
+        order.setTimeProcessed(new Date());
         
-        for(int x = 0;x < order.getListOfPurchases().size(); x++){
-           String productId = order.getListOfPurchases().get(x).getProductId();
-           //TODO: Check if product is in stock in Database
-        }
-            
-            
+        
+
     }
 }
