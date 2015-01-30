@@ -56,8 +56,8 @@ public class OrderQueueTest {
     public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws Exception {
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("CUST00001", "ABC Construction");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        order.addPurchase(new Purchase(0004, 450));
+        order.addPurchase(new Purchase(0006, 250));
         orderQueue.add(order);
         
         long expResult = new Date().getTime();
@@ -70,8 +70,8 @@ public class OrderQueueTest {
         boolean var = false;
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("", "");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        order.addPurchase(new Purchase(0004, 450));
+        order.addPurchase(new Purchase(0006, 250));
         
         try
         {
@@ -108,8 +108,8 @@ public class OrderQueueTest {
     public void testWhenNextOrderAndOrdersExistReturnEarliestOrderNotProcessedWithNoTime() throws Exception {
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("CUST00001", "ABC Construction");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        order.addPurchase(new Purchase(0004, 450));
+        order.addPurchase(new Purchase(0006, 250));
         orderQueue.add(order);
         Order testOrder = orderQueue.getEarliestNotProcessed();
 
@@ -121,8 +121,8 @@ public class OrderQueueTest {
     public void testWhenNextOrderAndNoOrdersExistReturnNull() throws Exception {
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("CUST00001", "ABC Construction");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        order.addPurchase(new Purchase(0004, 450));
+        order.addPurchase(new Purchase(0006, 250));
         orderQueue.add(order);
         Order testOrder = orderQueue.getEarliestNotProcessed();
 
@@ -139,5 +139,20 @@ public class OrderQueueTest {
         }
         
         assertEquals(expResult, true);
+    }
+    
+    @Test //7
+    public void testWhenRequestToProcessOrderSetProcessTimeIfRecievedTimeSetAndItemInStock() throws Exception{
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order("CUST00001", "ABC Construction");
+        order.addPurchase(new Purchase(14, 1));
+        order.addPurchase(new Purchase(15, 1));
+        orderQueue.add(order);
+        orderQueue.process(order);
+
+        long expResult = new Date().getTime();
+        long result = order.getTimeProcessed().getTime();
+        assertTrue(Math.abs(result - expResult) < 1000);
+        
     }
 }
